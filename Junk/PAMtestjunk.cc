@@ -136,8 +136,8 @@ NetDeviceContainer ndAp_Relay = p2p.Install(wifiAp, relayAp);
   //Also initial conditions, but these are made in the error model since thats where the values are used to calculate BER
   //em2->setRes(0.28);
   em2->setM(4);
-  em2->setNo(380,380,5000,100e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b));
   double sym = log2(em2->getM()) *5;
+  em2->setNo(380,380,5000,sym*1e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b));
   std::ostringstream ss;
   ss << sym;
   //std::cout << ss.str() <<std::endl;
