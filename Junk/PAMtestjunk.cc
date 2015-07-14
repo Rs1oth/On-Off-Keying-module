@@ -28,7 +28,7 @@
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("RoutingTestCase");
-static const uint32_t totalTxBytes = 100000; //The simulation with send 1000000 bytes in data packets (not including overhead)
+static const uint32_t totalTxBytes = 1000000; //The simulation with send 1000000 bytes in data packets (not including overhead)
 static uint32_t currentTxBytes = 0;
 static const uint32_t writeSize = 1040; // How big each packet will be, default for TCP is 536 w/out headers
 uint8_t data[writeSize];
@@ -54,25 +54,25 @@ std::vector<double> theTime (1,0);
 static void
 RxEnd (Ptr<const Packet> p) //used for tracing and calculating throughput
 {
-  if(Received.back() != sink1->GetTotalRx()){
+  /*if(Received.back() != sink1->GetTotalRx()){
     Received.push_back(sink1->GetTotalRx());
     theTime.push_back(Simulator::Now().GetSeconds());
-  }
+  }*/
 
-  //Received.push_back(Received.back() + p->GetSize()); //appends on the received packet to the received data up until that packet and adds that total to the end of the vector
-  //theTime.push_back(Simulator::Now().GetSeconds()); // keeps track of the time during simulation that a packet is received
+  Received.push_back(Received.back() + p->GetSize()); //appends on the received packet to the received data up until that packet and adds that total to the end of the vector
+  theTime.push_back(Simulator::Now().GetSeconds()); // keeps track of the time during simulation that a packet is received
 
  // NS_LOG_UNCOND ("Received : "<< p->GetSize() << " Bytes at " << Simulator::Now ().GetSeconds () <<"s" );
 }
 
-/*static void
+static void
 TxEnd (Ptr<const Packet> p)//also used as a trace and for calculating throughput
 {
  //NS_LOG_UNCOND ("Sent : "<< p->GetSize() << " Bytes at " << Simulator::Now ().GetSeconds () <<"s" );
   Received.push_back(Received.back() + p->GetSize()); //same as for the RxEnd trace
   theTime.push_back(Simulator::Now().GetSeconds());   //
  
-}*/
+}
 
 int main (int argc, char *argv[])
 {
@@ -106,7 +106,7 @@ internet.Install(c);
 
 //This helper sets up the P2P connections that we will be using
 PointToPointHelper p2p;
-p2p.SetDeviceAttribute("DataRate", StringValue("5Mbps"));
+p2p.SetDeviceAttribute("DataRate", StringValue("200Mbps"));
 p2p.SetChannelAttribute("Delay", StringValue("2ms"));
 NetDeviceContainer ndAp_Relay = p2p.Install(wifiAp, relayAp);
 //VLC---------------------------------------------------------
@@ -135,7 +135,7 @@ NetDeviceContainer ndAp_Relay = p2p.Install(wifiAp, relayAp);
 
   //Also initial conditions, but these are made in the error model since thats where the values are used to calculate BER
   //em2->setRes(0.28);
-  em2->setM(8);
+  em2->setM(4);
   em2->setNo(380,380,5000,100e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b));
   double sym = log2(em2->getM()) *5;
   std::ostringstream ss;
@@ -150,7 +150,7 @@ OOKHelper OOK; // This helper makes the VLC channel that we are going to use
 
 //------------------------------------------------------------
 //Wifi--------------------------------------------------------
- std::string phyMode ("DsssRate1Mbps");
+ std::string phyMode ("DsssRate11Mbps");
   double rss = -80;  // -dBm
 
 NodeContainer cont = NodeContainer(relayMt, relayAp);
@@ -267,13 +267,13 @@ ipv4RoutingHelper.PrintRoutingTableAllAt(Seconds(2.0), stream1);
 
 ndRelay_Mt.Get (1)->TraceConnectWithoutContext ("PhyRxEnd", MakeCallback (&RxEnd));//traces to allow us to see what and when data is sent through the network
 
-//ndRelay_Mt.Get (1)->TraceConnectWithoutContext ("PhyTxEnd", MakeCallback (&TxEnd));//traces to allow us to see what and when data is received through the network
+ndRelay_Mt.Get (1)->TraceConnectWithoutContext ("PhyTxEnd", MakeCallback (&TxEnd));//traces to allow us to see what and when data is received through the network
 
 //Simulator schedules
 Simulator::Schedule(Seconds(0.1), &StartFlow,srcSocket1, dstaddr, dstport);
 Simulator::Run();
 
-double goodput = ((Received.back()*8))/ theTime.back();//goodput calculation
+double throughput = ((Received.back()*8))/ theTime.back();//goodput calculation
 std::cout<<"-------------------------"<< std::endl;
 //std::cout<<"Received : " << Received.back() << std::endl;
 std::cout<<"Distance : " << dist << std::endl;
@@ -283,10 +283,10 @@ std::cout<<"Distance : " << dist << std::endl;
 
 
 
-myfile << dist << " " << em2->getSER()*log2(em2->getM()) << std::endl;
-myfile2 << dist << " " << em2->getSNR() << std::endl;
-myfile3 << dist << " " << goodput << std::endl;
-myfile4 << em2->getSNR() << " " << goodput << std::endl;
+myfile << 22 - dist << " " << em2->getSER()*log2(em2->getM()) << std::endl;
+myfile2 << 22 -dist << " " << em2->getSNR() << std::endl;
+myfile3 << 22 - dist << " " << throughput << std::endl;
+myfile4 << em2->getSNR() << " " << throughput << std::endl;
 
 Received.clear(); // clears the data received vector so as to avoid calculation errors from old and irrelevant values
 
