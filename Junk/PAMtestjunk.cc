@@ -28,7 +28,7 @@
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("RoutingTestCase");
-static const uint32_t totalTxBytes = 1000000; //The simulation with send 1000000 bytes in data packets (not including overhead)
+static const uint32_t totalTxBytes = 100000; //The simulation with send 1000000 bytes in data packets (not including overhead)
 static uint32_t currentTxBytes = 0;
 static const uint32_t writeSize = 1040; // How big each packet will be, default for TCP is 536 w/out headers
 uint8_t data[writeSize];
@@ -90,7 +90,7 @@ myfile4.open("GvS.dat");
 
 
 
-  for(double dist = 3 ; dist < 5 ; dist+=.001){ //loops the simulation by increasing distance between nodes
+  for(double dist = 22 ; dist > 0 ; dist-=.01){ //loops the simulation by increasing distance between nodes
 
 //creating each node object
 Ptr<Node> wifiAp = CreateObject<Node>();
@@ -113,7 +113,7 @@ NetDeviceContainer ndAp_Relay = p2p.Install(wifiAp, relayAp);
   Ptr<VlcMobilityModel> a = CreateObject<VlcMobilityModel> ();//These vectors are what represent the nodes moving
   Ptr<VlcMobilityModel> b = CreateObject<VlcMobilityModel> ();//in space
 
-  a -> SetPosition (Vector (0.0,0.0,11.5));
+  a -> SetPosition (Vector (0.0,0.0,22.0));
   b -> SetPosition (Vector (0.0,0.0,dist));
   a ->SetAzimuth(0.0);
   b ->SetAzimuth(0.0);
@@ -140,7 +140,7 @@ NetDeviceContainer ndAp_Relay = p2p.Install(wifiAp, relayAp);
   double sym = log2(em2->getM()) *5;
   std::ostringstream ss;
   ss << sym;
-  std::cout << ss.str() <<std::endl;
+  //std::cout << ss.str() <<std::endl;
 OOKHelper OOK; // This helper makes the VLC channel that we are going to use
   OOK.SetDeviceAttribute ("DataRate", StringValue (ss.str() + "Mbps"));
   OOK.SetChannelAttribute ("Delay", StringValue ("2ms"));
@@ -274,9 +274,9 @@ Simulator::Schedule(Seconds(0.1), &StartFlow,srcSocket1, dstaddr, dstport);
 Simulator::Run();
 
 double goodput = ((Received.back()*8))/ theTime.back();//goodput calculation
-//std::cout<<"-------------------------"<< std::endl;
+std::cout<<"-------------------------"<< std::endl;
 //std::cout<<"Received : " << Received.back() << std::endl;
-//std::cout<<"Distance : " << dist << std::endl;
+std::cout<<"Distance : " << dist << std::endl;
 //std::cout<<"Time : " << theTime.back() << std::endl;
 //std::cout<<"THROUGHPUT : " << throughput << std::endl;
 //std::cout<<"SER : " << em2->getSER() << std::endl;
