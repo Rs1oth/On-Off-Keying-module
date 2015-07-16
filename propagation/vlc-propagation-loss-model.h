@@ -47,7 +47,7 @@ public:
   //Constructor
   VLCPropagationLossModel ();
   void SetTxPower(double dBm);
-  void setEfficacy (double x);
+  void setEfficacy (int low, int up, double t);
   double getEfficacy();
   double GetTxPower();
   void SetLambertianOrder(double semiangle); //Must be in degrees
@@ -66,8 +66,16 @@ public:
   double GetRxPower(Ptr<MobilityModel> a, Ptr<MobilityModel> b) const;
   double dotProduct(std::vector<double> v1, std::vector<double> v2) const; 
   double magnitude(std::vector<double> v) const; 
-  double calculateIlluminance(Ptr<MobilityModel> a, Ptr<MobilityModel> b);
 
+  int wavelength_lower; //Lower bound WaveLength
+  int wavelength_upper; //Upper bound Wavelength
+  double temp;  // Blackbody temp of LED
+
+  double SpectralRadiance(int wavelength, double temperature);
+
+  double integralLum();
+
+  double integralPlanck();
 
 private:
 /**
@@ -83,6 +91,7 @@ private:
    * \returns
    */
   VLCPropagationLossModel & operator = (const VLCPropagationLossModel &);
+  double calculateIlluminance(Ptr<MobilityModel> a, Ptr<MobilityModel> b);
   virtual double DoCalcRxPower (double txPowerDbm, Ptr<MobilityModel> a, Ptr<MobilityModel> b) const;
   virtual int64_t DoAssignStreams (int64_t stream);
   double m_TxPower;
@@ -93,6 +102,7 @@ private:
   double m_RxPower;
   double m_efficacy;
   double illuminance;
+  
 
 };
 
