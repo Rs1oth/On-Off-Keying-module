@@ -1,70 +1,191 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2007 University of Washington
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation;
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-#ifndef A_ERROR_MODEL_H
-#define A_ERROR_MODEL_H
+#ifndef ON_OFF_KEYING_CHANNEL_H
+#define ON_OFF_KEYING_CHANNEL_H
 
 #include <list>
-#include "ns3/object.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/error-model.h"
-#include "ns3/traced-value.h"
-
+#include "ns3/channel.h"
+#include "ns3/ptr.h"
+#include "ns3/nstime.h"
+#include "ns3/data-rate.h"
+#include "ns3/traced-callback.h"
+#include "on-off-keying-net-device.h"
 
 namespace ns3 {
 
+class PointToPointNetDevice;
 class Packet;
 
 
-
-//
-//AErrorModel
-//
-class AErrorModel : public ErrorModel
+class OOKChannel : public Channel 
 {
 public:
-
-  AErrorModel ();
-   ~AErrorModel ();
-
   /**
-   * \brief Get the type ID.
-   * \return the object TypeId
+   * \brief Get the TypeId
+   *
+   * \return The TypeId for this class
    */
   static TypeId GetTypeId (void);
 
-  static double calculateBER ();
+  /**
+   * \brief Create a PointToPointChannel
+   *
+   * By default, you get a channel that has an "infinitely" fast 
+   * transmission speed and zero delay.
+   */
+  OOKChannel ();
 
-  static void calculateEb();
+  /**
+   * \brief Attach a given netdevice to this channel
+   * \param device pointer to the netdevice to attach to the channel
+   */
+  void Attach (Ptr<OnOffKeyingNetDevice> device);
 
-  static void setNo (double n);
+  /**
+   * \brief Transmit a packet over this channel
+   * \param p Packet to transmit
+   * \param src Source PointToPointNetDevice
+   * \param txTime Transmit time to apply
+   * \returns true if successful (currently always true)
+   */
+  virtual bool TransmitStart (Ptr<Packet> p, Ptr<OnOffKeyingNetDevice> src, Time txTime);
 
-  static void setRx (double x);
+  /**
+   * \brief Get number of devices on this channel
+   * \returns number of devices on this channel
+   */
+  virtual uint32_t GetNDevices (void) const;
 
-  static void setRb (double b);
+  /**
+   * \brief Get PointToPointNetDevice corresponding to index i on this channel
+   * \param i Index number of the device requested
+   * \returns Ptr to PointToPointNetDevice requested
+   */
+  Ptr<OnOffKeyingNetDevice> GetOOKDevice (uint32_t i) const;
 
-  static void setRes (double r);
+  /**
+   * \brief Get NetDevice corresponding to index i on this channel
+   * \param i Index number of the device requested
+   * \returns Ptr to NetDevice requested
+   */
+  virtual Ptr<NetDevice> GetDevice (uint32_t i) const;
 
-  static double getEb(void);
+protected:
+  /**
+   * \brief Get the delay associated with this channel
+   * \returns Time delay
+   */
+  Time GetDelay (void) const;
 
-  static double getBER(void);
-  
-  static double getNo(void);
+  /**
+   * \brief Check to make sure the link is initialized
+   * \returns true if initialized, asserts otherwise
+   */
+  bool IsInitialized (void) const;
 
-  static double getSNR(void);
+  /**
+   * \brief Get the net-device source 
+   * \param i the link requested
+   * \returns Ptr to PointToPointNetDevice source for the 
+   * specified link
+   */
+  Ptr<OnOffKeyingNetDevice> GetSource (uint32_t i) const;
 
-   
+  /**
+   * \brief Get the net-device destination
+   * \param i the link requested
+   * \returns Ptr to PointToPointNetDevice destination for 
+   * the specified link
+   */
+  Ptr<OnOffKeyingNetDevice> GetDestination (uint32_t i) const;
+
+  /**
+   * TracedCallback signature for packet transmission animation events.
+   *
+   * \param [in] packet The packet being transmitted.
+   * \param [in] txDevice the TransmitTing NetDevice.
+   * \param [in] rxDevice the Receiving NetDevice.
+   * \param [in] duration The amount of time to transmit the packet.
+   * \param [in] lastBitTime Last bit receive time (relative to now)
+   */
+  typedef void (* TxRxAnimationCallback)
+    (const Ptr<const Packet> packet,
+     const Ptr<const NetDevice> txDevice, const Ptr<const NetDevice> rxDevice,
+     const Time duration, const Time lastBitTime);
+                    
 private:
+  /** Each point to point link has exactly two net devices. */
+  static const int N_DEVICES = 2;
 
-virtual bool DoCorrupt(Ptr<Packet> p);
+  Time          m_delay;    //!< Propagation delay
+  int32_t       m_nDevices; //!< Devices of this channel
 
-virtual void DoReset(void);
+  /**
+   * The trace source for the packet transmission animation events that the 
+   * device can fire.
+   * Arguments to the callback are the packet, transmitting
+   * net device, receiving net device, transmission time and 
+   * packet receipt time.
+   *
+   * \see class CallBackTraceSource
+   */
+  TracedCallback<Ptr<const Packet>, // Packet being transmitted
+                 Ptr<NetDevice>,    // Transmitting NetDevice
+                 Ptr<NetDevice>,    // Receiving NetDevice
+                 Time,              // Amount of time to transmit the pkt
+                 Time               // Last bit receive time (relative to now)
+                 > m_txrxPointToPoint;
 
+  /** \brief Wire states
+   *
+   */
+  enum WireState
+  {
+    /** Initializing state */
+    INITIALIZING,
+    /** Idle state (no transmission from NetDevice) */
+    IDLE,
+    /** Transmitting state (data being transmitted from NetDevice. */
+    TRANSMITTING,
+    /** Propagating state (data is being propagated in the channel. */
+    PROPAGATING
+  };
 
-double m_rate;
+  /**
+   * \brief Wire model for the PointToPointChannel
+   */
+  class Link
+  {
+public:
+    /** \brief Create the link, it will be in INITIALIZING state
+     *
+     */
+    Link() : m_state (INITIALIZING), m_src (0), m_dst (0) {}
 
-Ptr<RandomVariableStream> m_ranvar;
-  
+    WireState                  m_state; //!< State of the link
+    Ptr<OnOffKeyingNetDevice> m_src;   //!< First NetDevice
+    Ptr<OnOffKeyingNetDevice> m_dst;   //!< Second NetDevice
+  };
+
+  Link    m_link[N_DEVICES]; //!< Link model
 };
 
-
 } // namespace ns3
-#endif
+
+#endif /* ON_OFF_KEYING_CHANNEL_H */
