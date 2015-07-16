@@ -82,8 +82,56 @@ VLCPropagationLossModel::GetTypeId (void)
   return tid;
 }
 
+double V_lambda[] = { 
+0.000039, 0.000120, 0.000396, 0.001210, 0.004000, 0.011600, 0.023000, 
+0.038000, 0.060000, 0.090980, 0.139020, 0.208020, 0.323000,  0.503000, 
+0.710000, 0.862000, 0.954000, 0.994950,  0.995000, 0.952000, 0.870000, 
+0.757000, 0.631000, 0.503000, 0.381000, 0.265000, 0.175000, 0.107000, 
+0.061000, 0.032000, 0.017000, 0.008210, 0.004102, 0.002091, 0.001047, 
+0.000520, 0.000249, 0.000120, 0.000060, 0.000030 };
 
 double VLCPropagationLossModel::Fov = 0;
+
+//Spectral Radiance (Planck's Law)
+double VLCPropagationLossModel::SpectralRadiance( int wavelength, double temperature){
+        double spectral_rad;
+        double h = 6.62606957e-34; //Planck's constant
+        double c = 299792458;      //speed of light
+        double k = 1.3806488e-23;  //Boltzmann constant
+        double waveLength = wavelength * 1e-9; //nm
+        return spectral_rad = 15*((std::pow((h*c)/(M_PI*k*temperature), 4)))/((std::pow(waveLength, 5)) * ((std::exp((h*c)/(waveLength*k*temperature)))-1));
+};
+
+//Definite integral of the Luminosity Function(wavelength)*Spectral Radiance(wavelength, temperature) d(wavelength)
+double VLCPropagationLossModel::integralLum(){
+        double integral = 0;
+        int waveLower = wavelength_lower;
+        int waveUpper = wavelength_upper;
+
+        while(waveLower <= waveUpper)
+        {
+                integral += V_lambda[(waveLower-380)/10] * SpectralRadiance(waveLower, temp) * 10e-9;
+                waveLower += 10;
+        }
+        
+        return integral;
+}
+
+//Definite integral of the Spectral Radiance(wavelength, temperature) d(wavelength)
+double VLCPropagationLossModel::integralPlanck(){
+        double integral = 0;
+        int waveLower = wavelength_lower;
+        int waveUpper = wavelength_upper;       
+
+        while(waveLower <= waveUpper)
+        {
+                integral += SpectralRadiance(waveLower, temp) * 10e-9;
+                waveLower += 10;
+        }
+        
+        return integral;
+}
+
 VLCPropagationLossModel::VLCPropagationLossModel ()
 {
 }
@@ -98,8 +146,13 @@ VLCPropagationLossModel::SetTxPower (double dBm)
 
 
 void 
-VLCPropagationLossModel::setEfficacy (double x){
-m_efficacy = x;
+VLCPropagationLossModel::setEfficacy (int lower, int upper, double Temp){
+   wavelength_lower = lower;
+   wavelength_upper = upper;
+   temp = Temp;
+
+   m_efficacy = 683 * integralLum() / integralPlanck();
+
 }
 
 
