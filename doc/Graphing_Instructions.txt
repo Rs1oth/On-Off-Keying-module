@@ -1,0 +1,12 @@
+Graphing Instructions
+
+We used two different ways to graph our data:
+
+1) The first way is by using ns3's Gnuplot class. This link provides a useful tutorial: https://www.nsnam.org/docs/manual/html/gnuplot.html .
+
+2) Second way is by installing GNU Octave. Octave is an open source high-level interpreted language (very similar to MATLAB).
+	To install Octave:
+	- In the terminal type: sudo apt-get install octave. 
+	  This will download the latest version of Octave.
+	To use Octave:
+	- Once installed, you can type octave in the terminal and run the .m scripts (by 	   simply typing the name of the file) written in MATLAB code.
