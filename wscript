@@ -9,13 +9,14 @@ def configure(conf):
 def build(bld):
     module = bld.create_ns3_module('on-off-keying-module', ['core','network', 'mpi'])
     module.source = [
-       # 'model/on-off-keying-module.cc',
         'helper/on-off-keying-module-helper.cc',
         'model/on-off-keying-channel.cc',
         'model/on-off-keying-net-device.cc',
         'model/on-off-keying-remote-channel.cc',
         'model/OOK-header.cc',
         'model/OOK-error-model.cc',
+        'model/OOK-error-model-2Interference.cc',
+        'model/PAM-error-model.cc',
         'model/vlc-propagation-loss-model.cc',
         'model/VLC-Mobility-Model.cc',
         ]
@@ -28,13 +29,14 @@ def build(bld):
     headers = bld(features='ns3header')
     headers.module = 'on-off-keying-module'
     headers.source = [
-        #'model/on-off-keying-module.h',
         'helper/on-off-keying-module-helper.h',
         'model/on-off-keying-net-device.h',
         'model/on-off-keying-channel.h',
         'model/on-off-keying-remote-channel.h',
         'model/OOK-header.h',
         'model/OOK-error-model.h',
+        'model/OOK-error-model-2Interference.h',
+        'model/PAM-error-model.h',
         'model/vlc-propagation-loss-model.h',
         'model/VLC-Mobility-Model.h',
         ]
