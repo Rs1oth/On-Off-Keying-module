@@ -9,4 +9,4 @@ We used two different ways to graph our data:
 	- In the terminal type: sudo apt-get install octave. 
 	  This will download the latest version of Octave.
 	To use Octave:
-	- Once installed, you can type octave in the terminal and run the .m scripts (by 	   simply typing the name of the file) written in MATLAB code.
+	- Once installed, you can type octave in the terminal and run the .m scripts (by simply typing the name of the file) written in MATLAB code.
