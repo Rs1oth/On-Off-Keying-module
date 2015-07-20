@@ -25,7 +25,7 @@
 #include <cmath>
 using namespace ns3;
 NS_LOG_COMPONENT_DEFINE("RoutingTestCase");
-static const uint32_t totalTxBytes = 1000000; //The simulation with send 1000000 bytes in data packets (not including overhead)
+static const uint32_t totalTxBytes = 1000; //The simulation with send 1000 bytes in data packets (not including overhead)
 static uint32_t currentTxBytes = 0;
 static const uint32_t writeSize = 1040; // How big each packet will be, default for TCP is 536 w/out headers
 uint8_t data[writeSize];
@@ -78,7 +78,7 @@ std::ofstream myfile5;
 myfile5.open("BvS_VPPM.dat");
 
 
-for(double dist = 25 ; dist > 10 ; dist-=.1){ //loops the simulation by increasing distance between nodes
+for(double dist = 50 ; dist > 0 ; dist-=.01){ //loops the simulation by increasing distance between nodes
 //creating each node object
 
 
@@ -100,7 +100,7 @@ NetDeviceContainer ndAp_Relay = p2p.Install(wifiAp, relayAp);
 //VLC---------------------------------------------------------
 Ptr<VlcMobilityModel> a = CreateObject<VlcMobilityModel> ();//These vectors are what represent the nodes moving
 Ptr<VlcMobilityModel> b = CreateObject<VlcMobilityModel> ();//in space
-a -> SetPosition (Vector (0.0,0.0,42.0));
+a -> SetPosition (Vector (0.0,0.0,52.0));
 b -> SetPosition (Vector (0.0,0.0,dist));
 a ->SetAzimuth(0.0);
 b ->SetAzimuth(0.0);
@@ -123,7 +123,7 @@ VPLM.SetConcentratorGain(70,1.5);
 //double sym = log2(em2->getM()) *5;
 
 
-em2->setNo(380,380,5000,5*1e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b),0.15);
+em2->setNo(380,380,5000,5*1e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b),0.85);
 std::ostringstream ss;
 
 ss << 5;
@@ -232,9 +232,9 @@ std::cout<<"Distance : " << dist << std::endl;
 //std::cout<<"Time : " << theTime.back() << std::endl;
 //std::cout<<"THROUGHPUT : " << throughput << std::endl;
 //std::cout<<"SER : " << em2->getSER() << std::endl;
-myfile << 42 - dist << " " << em2->getSER() << std::endl;
-myfile2 << 42 -dist << " " << em2->getSNR() << std::endl;
-myfile3 << 42 - dist << " " << throughput << std::endl;
+myfile << 52 - dist << " " << em2->getSER() << std::endl;
+myfile2 << 52 -dist << " " << em2->getSNR() << std::endl;
+myfile3 << 52 - dist << " " << throughput << std::endl;
 myfile4 << em2->getSNR() << " " << throughput << std::endl;
 
 //myfile5 << em2->getSER()*log2(em2->getM()) << " " << em2->getSNR() << std::endl;
