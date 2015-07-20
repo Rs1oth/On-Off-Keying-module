@@ -1,3 +1,10 @@
+
+/* 
+ *
+ * Author: James Basuino  <jb392@njit.edu>
+ *         
+ *         
+*/
 #include <iostream>
 #include "ns3/abort.h"
 #include "ns3/assert.h"
