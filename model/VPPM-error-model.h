@@ -27,7 +27,7 @@ double b;
 double alpha; //Duty-cycle
 double No; // Noise power in A^2
 double Rx; // Received Power in dbm
-double SER; // Bit Error Rate
+double BER; // Bit Error Rate
 double res; //Responsitivity of Receiver
 double SNR; //Signal to noise ratio
 int wavelength_lower; //Lower bound WaveLength
@@ -36,7 +36,7 @@ double temp; // Blackbody temp of LED
 // double M; //Size of Symbol
 static double V_lambda[];
 static double Response[];
-double calculateSER (); //Calculates SER
+double calculateBER (); //Calculates SER
 //Used to calculate Responsitivty and Lumanince.
 double SpectralRadiance(int wavelength, double temperature);
 double integralLum();
@@ -45,12 +45,20 @@ double integralRes();
 double getWavelengthUpper();
 double getWavelengthLower();
 double getTemperature();
-void setNo (int lower, int upper, int T ,double n, double a , double rx, double duty_cycle);// Sets Noise and Received Power
+void setNo (int lower, int upper, int T ,double n, double a , double rx);// Sets Noise and Received Power
 //void setM (double m); //Sets the size of Symbol
 //int getM(void);
-double getSER(void); //Returns Symbol Error Rate
+double getBER(void); //Returns Symbol Error Rate
 double getNo(void); //Returns Noise power
 double getSNR(void); // Return Signal to Noise Ratio
+
+
+void setDutyCycle(double a); // Sets the Duty Cycle
+double getDutyCycle(void); // Returns the Duty Cycle
+void setb(double B);
+double getb(void);
+
+
 private:
 virtual bool DoCorrupt(Ptr<Packet> p); //Virtual method called by simulator to determind when a packets drops/ is corrupted
 virtual void DoReset(void); //Virtual method does nothing
