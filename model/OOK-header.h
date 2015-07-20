@@ -1,4 +1,10 @@
-/* Copyright info*/
+
+/* 
+ *
+ * Author: James Basuino   <jb392@njit.edu>
+ *         
+ *         
+*/
 
 #ifndef OOK_HEADER_H
 #define OOK_HEADER_H
