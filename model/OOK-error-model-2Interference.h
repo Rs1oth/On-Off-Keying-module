@@ -1,4 +1,10 @@
 
+/* 
+ *
+ * Author: Ryan Ackerman   <rea9@njit.edu>
+ *         
+ *         
+*/
 #ifndef OOK_2Int_ERROR_MODEL_H
 #define OOK_2Int_ERROR_MODEL_H
 
