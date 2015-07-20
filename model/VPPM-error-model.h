@@ -1,4 +1,4 @@
-
+ 
 #ifndef VPPM_ERROR_MODEL_H
 #define VPPM_ERROR_MODEL_H
 #include <list>
@@ -23,6 +23,7 @@ VPPMErrorModel ();
 */
 //static TypeId GetTypeId (void);
 
+double b;
 double alpha; //Duty-cycle
 double No; // Noise power in A^2
 double Rx; // Received Power in dbm
@@ -32,7 +33,7 @@ double SNR; //Signal to noise ratio
 int wavelength_lower; //Lower bound WaveLength
 int wavelength_upper; //Upper bound Wavelength
 double temp; // Blackbody temp of LED
-double M; //Size of Symbol
+// double M; //Size of Symbol
 static double V_lambda[];
 static double Response[];
 double calculateSER (); //Calculates SER
@@ -45,8 +46,8 @@ double getWavelengthUpper();
 double getWavelengthLower();
 double getTemperature();
 void setNo (int lower, int upper, int T ,double n, double a , double rx, double duty_cycle);// Sets Noise and Received Power
-void setM (double m); //Sets the size of Symbol
-int getM(void);
+//void setM (double m); //Sets the size of Symbol
+//int getM(void);
 double getSER(void); //Returns Symbol Error Rate
 double getNo(void); //Returns Noise power
 double getSNR(void); // Return Signal to Noise Ratio
@@ -58,4 +59,3 @@ Ptr<RandomVariableStream> m_ranvar; //Not used
 };
 } // namespace ns3
 #endif
-
