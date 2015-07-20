@@ -221,11 +221,11 @@ return SNR;
 }
 //Sets the Symbol size of the M-Pam
 //void VPPMErrorModel::setM(double m){
-M = m;
-}
+//M = m;
+//}
 //int VPPMErrorModel::getM(void){
-return M;
-}
+//return M;
+//}
 } // namespace ns3
 
 
