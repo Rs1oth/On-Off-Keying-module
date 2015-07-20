@@ -113,6 +113,16 @@ double VPPMErrorModel::getWavelengthLower()
 {
 return wavelength_upper;
 }
+
+void VPPMErrorModel::setDutyCycle(double a){
+alpha = a;
+} 
+
+void VPPMErrorModel::setb(double B){
+b = B;
+}
+
+
 double VPPMErrorModel::getTemperature()
 {
 return temp;
@@ -120,11 +130,11 @@ return temp;
 // Virtual method from Error Model. Determinds what packets to be dropped.
 bool VPPMErrorModel::DoCorrupt(Ptr<Packet> p){
 NS_LOG_FUNCTION(this << p);
-SER = calculateSER();
+BER = calculateBER();
 //Caculated the Packet Error Rate by finding the complement of the probablility
 //that a packets is not corrupted
 double num = 1;
-double per = 1.0 - (double)std::pow((double)(1.0 - SER), static_cast<double>((8*p->GetSize())/num));
+double per = 1.0 - (double)std::pow((double)(1.0 - BER), static_cast<double>((8*p->GetSize())/num));
 //Randomizies a number and if its less than the PER the packet is rejected
 double rnd = (double) rand()/(double)(RAND_MAX);
 return (rnd < per);
@@ -132,10 +142,10 @@ return (rnd < per);
 void VPPMErrorModel::DoReset(void){
 }
 //Calculates BER from SNR
-double VPPMErrorModel::calculateSER (){
+double VPPMErrorModel::calculateBER (){
 //SNR calculation
 SNR = (std::pow((Rx*res),2)/No);
-double ser;
+double ber;
 if(SNR > 0){
 //BER calculation
 //ser = (2*(M-1)/M)* 0.5 *erfc((std::sqrt(SNR)/std::sqrt(2))/(M-1));
@@ -146,25 +156,26 @@ b = 10;
 if(alpha<0.5)
 {
 
-	ser = 0.5*erfc((std::sqrt((b*SNR)/(2*alpha)))/std::sqrt(2));
+
+	ber = 0.5*erfc((std::sqrt((b*SNR)/(2*alpha)))/std::sqrt(2));
 }
 else
 {
-	ser = 0.5*erfc(std::sqrt(((1-alpha)*b*SNR)/(2*std::pow(alpha,2)))/std::sqrt(2));
+	ber = 0.5*erfc(std::sqrt(((1-alpha)*b*SNR)/(2*std::pow(alpha,2)))/std::sqrt(2));
 }
 
 //std::cout << "BER = " << ser << std::endl;
 }else{
-ser = 1;
+ber = 1;
 }
-return ser;
+return ber;
 }
 //Set Noise power and Received Power
-void VPPMErrorModel::setNo (int lower, int upper, int T ,double B, double A, double rx, double duty_cycle){ //B is the Bandwidth of the electrical filter [b/s] and photodetector Area [cm^2
+void VPPMErrorModel::setNo (int lower, int upper, int T ,double B, double A, double rx){ //B is the Bandwidth of the electrical filter [b/s] and photodetector Area [cm^2
 wavelength_lower = lower;
 wavelength_upper = upper;
 
-alpha = duty_cycle;
+//alpha = duty_cycle;
 temp = T;
 Rx = rx;
 res = integralRes()/integralPlanck();
@@ -190,13 +201,25 @@ double VPPMErrorModel::getNo(void){
 return No;
 }
 //Gets BER
-double VPPMErrorModel::getSER(void){
-return SER;
+double VPPMErrorModel::getBER(void){
+return BER;
 }
 //Gets SNR
 double VPPMErrorModel::getSNR(void){
 return SNR;
 }
+//Gets DutyCycle
+double VPPMErrorModel::getDutyCycle(void){
+return alpha;
+}
+//Gets b
+double VPPMErrorModel::getb(void){
+return b;
+}
+
+
+
+
 //Sets the Symbol size of the M-Pam
 //void VPPMErrorModel::setM(double m){
 //M = m;
@@ -205,4 +228,3 @@ return SNR;
 //return M;
 //}
 } // namespace ns3
-
