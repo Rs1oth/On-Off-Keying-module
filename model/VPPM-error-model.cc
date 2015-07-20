@@ -1,25 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 *
 * Author: Ryan Ackerman <rea9@njit.edu>
@@ -168,11 +146,11 @@ b = 10;
 if(alpha<0.5)
 {
 
-	ser = 0.5*erfc(std::sqrt((b*SNR)/(2*alpha*std::sqrt(2))));
+	ser = 0.5*erfc((std::sqrt((b*SNR)/(2*alpha)))/std::sqrt(2));
 }
 else
 {
-	ser = 0.5*erfc(std::sqrt(((1-alpha)*b*SNR)/(std::sqrt(2)*2*std::pow(alpha,2))));
+	ser = 0.5*erfc(std::sqrt(((1-alpha)*b*SNR)/(2*std::pow(alpha,2)))/std::sqrt(2));
 }
 
 //std::cout << "BER = " << ser << std::endl;
@@ -227,18 +205,4 @@ return SNR;
 //return M;
 //}
 } // namespace ns3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
