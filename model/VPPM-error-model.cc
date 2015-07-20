@@ -1,7 +1,7 @@
 /*
 *
 * Author: Ryan Ackerman <rea9@njit.edu>
-*
+* 
 *
 */
 #include <cmath>
