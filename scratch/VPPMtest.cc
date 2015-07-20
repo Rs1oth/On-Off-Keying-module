@@ -232,9 +232,9 @@ std::cout<<"Distance : " << dist << std::endl;
 //std::cout<<"Time : " << theTime.back() << std::endl;
 //std::cout<<"THROUGHPUT : " << throughput << std::endl;
 //std::cout<<"SER : " << em2->getSER() << std::endl;
-myfile << 52 - dist << " " << em2->getSER() << std::endl;
-myfile2 << 52 -dist << " " << em2->getSNR() << std::endl;
-myfile3 << 52 - dist << " " << throughput << std::endl;
+myfile << 42 - dist << " " << em2->getSER() << std::endl;
+myfile2 << 42 -dist << " " << em2->getSNR() << std::endl;
+myfile3 << 42 - dist << " " << throughput << std::endl;
 myfile4 << em2->getSNR() << " " << throughput << std::endl;
 
 //myfile5 << em2->getSER()*log2(em2->getM()) << " " << em2->getSNR() << std::endl;
