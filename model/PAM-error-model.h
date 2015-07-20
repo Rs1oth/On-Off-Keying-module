@@ -1,4 +1,10 @@
 
+/* 
+ *
+ * Author: Ryan Ackerman   <rea9@njit.edu>
+ *         
+ *         
+*/
 #ifndef PAM_ERROR_MODEL_H
 #define PAM_ERROR_MODEL_H
 
