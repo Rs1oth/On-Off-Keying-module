@@ -122,8 +122,9 @@ VPLM.SetConcentratorGain(70,1.5);
 //em2->setM(2);
 //double sym = log2(em2->getM()) *5;
 
-
-em2->setNo(380,380,5000,5*1e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b),0.85);
+em2->setDutyCycle(0.85);
+em2->setb(10.0);
+em2->setNo(380,380,5000,5*1e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b));
 std::ostringstream ss;
 
 ss << 5;
@@ -232,13 +233,13 @@ std::cout<<"Distance : " << dist << std::endl;
 //std::cout<<"Time : " << theTime.back() << std::endl;
 //std::cout<<"THROUGHPUT : " << throughput << std::endl;
 //std::cout<<"SER : " << em2->getSER() << std::endl;
-myfile << 52 - dist << " " << em2->getSER() << std::endl;
+myfile << 52 - dist << " " << em2->getBER() << std::endl;
 myfile2 << 52 -dist << " " << em2->getSNR() << std::endl;
 myfile3 << 52 - dist << " " << throughput << std::endl;
 myfile4 << em2->getSNR() << " " << throughput << std::endl;
 
 //myfile5 << em2->getSER()*log2(em2->getM()) << " " << em2->getSNR() << std::endl;
-myfile5 << em2->getSER() << " " << em2->getSNR() << std::endl;
+myfile5 << em2->getBER() << " " << em2->getSNR() << std::endl;
 
 Received.clear(); // clears the data received vector so as to avoid calculation errors from old and irrelevant values
 Simulator::Destroy();
