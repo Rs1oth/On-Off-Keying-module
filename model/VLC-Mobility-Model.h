@@ -1,4 +1,10 @@
 
+/* 
+ *
+ * Author: Ryan Ackerman   <rea9@njit.edu>
+ *         
+ *         
+*/
 #ifndef VLC_MOBILITY_MODEL_H
 #define VLC_MOBILITY_MODEL_H
 
