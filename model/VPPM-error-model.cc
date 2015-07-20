@@ -1,6 +1,25 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 *
 * Author: Ryan Ackerman <rea9@njit.edu>
@@ -126,7 +145,7 @@ NS_LOG_FUNCTION(this << p);
 SER = calculateSER();
 //Caculated the Packet Error Rate by finding the complement of the probablility
 //that a packets is not corrupted
-double num = log2(M);
+double num = 1;
 double per = 1.0 - (double)std::pow((double)(1.0 - SER), static_cast<double>((8*p->GetSize())/num));
 //Randomizies a number and if its less than the PER the packet is rejected
 double rnd = (double) rand()/(double)(RAND_MAX);
@@ -144,14 +163,16 @@ if(SNR > 0){
 //ser = (2*(M-1)/M)* 0.5 *erfc((std::sqrt(SNR)/std::sqrt(2))/(M-1));
 //std::cout<<"SER : " << ser << std::endl;
 //std::cout << "alpha = "<< alpha << std::endl;
+
+b = 10;
 if(alpha<0.5)
 {
 
-	ser = 0.5*erfc(std::sqrt((10*SNR)/(2*alpha*std::sqrt(2))));
+	ser = 0.5*erfc(std::sqrt((b*SNR)/(2*alpha*std::sqrt(2))));
 }
 else
 {
-	ser = 0.5*erfc(std::sqrt(((1-alpha)*10*SNR)/(std::sqrt(2)*2*std::pow(alpha,2))));
+	ser = 0.5*erfc(std::sqrt(((1-alpha)*b*SNR)/(std::sqrt(2)*2*std::pow(alpha,2))));
 }
 
 //std::cout << "BER = " << ser << std::endl;
@@ -199,11 +220,25 @@ double VPPMErrorModel::getSNR(void){
 return SNR;
 }
 //Sets the Symbol size of the M-Pam
-void VPPMErrorModel::setM(double m){
+//void VPPMErrorModel::setM(double m){
 M = m;
 }
-int VPPMErrorModel::getM(void){
+//int VPPMErrorModel::getM(void){
 return M;
 }
 } // namespace ns3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
