@@ -1,4 +1,10 @@
- 
+
+/* 
+ *
+ * Author: Ryan Ackerman   <rea9@njit.edu>
+ *         
+ *         
+*/
 #ifndef VPPM_ERROR_MODEL_H
 #define VPPM_ERROR_MODEL_H
 #include <list>
