@@ -28,6 +28,7 @@ Prerequisites:
 -ability to open .zip files
 
 Installation:
+
 DISCLAIMER: THE JUNK AND SCRATCH FOLDERS ARE NOT NEEDED IN THE ACTUAL MODULE AND CAN BE DELETED UPON INSTALLASTION.
 
 1) download .zip file in this repository: https://github.com/RyanAckerman/On-Off-Keying-module
