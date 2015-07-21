@@ -15,8 +15,8 @@ Once an example script is made and compiles, to run this script it must be in th
 NS-3 file documentation: https://www.nsnam.org/doxygen/index.html
 
 Description:
-                Currently this module mimcs that of a point to point connection but it will soon be akin to that of an OOK modulation scheme through an optical light channel. The main module files are in the model folder and the helper is there to make seting objects of this type in a script easier and require less overhead. 
-                The Scratch folder included, has a couple of example scripts that show how the module objects are used in a simulation. The first script is a simple connection between two nodes using the OOK connection and the other script is an example of using this connection in conjunctions with other connections such as a wifi connection. There is also now scripts that use our propagation and error models in conjunction with TCP and UDP and exract useful data that can be readily graphed in third-party programs.
+                Currently this module mimcs that of a VLC connection whose base mimcs a point-to-point connection.We have added a couple of different modulation schemes to work with and these can be seen in the error models. The main module files are in the model folder and the helper is there to make seting objects of this type in a script easier and require less overhead. 
+                The Scratch folder included, has a couple of example scripts that show how the module objects are used in a simulation. These scripts try to show the use of various facets of this module such s throughput calculations and values for BER and SNR of the signal. This is a work in progress and the people working on it exclusively will be changing throughout the duration of this project.
 
 
 //installing the actual module
