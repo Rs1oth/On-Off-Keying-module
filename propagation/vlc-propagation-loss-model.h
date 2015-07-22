@@ -17,9 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: James Basuino       <jb392@njit.edu>
- * Author: Ryan Ackerman       <rea9@njit.edu>
- * Author: Walter Berreta
- * Author: Atreya Misra
  *                              
  */
  
@@ -50,9 +47,11 @@ public:
   //Constructor
   VLCPropagationLossModel ();
   void SetTxPower(double dBm);
+  void SetTxPower(double deviceMax, double peak, double desired);
   void setEfficacy (int low, int up, double t);
   double getEfficacy();
   double GetTxPower();
+  double GetOpticalPower();
   void SetLambertianOrder(double semiangle); //Must be in degrees
   double GetLambertianOrder();
   void SetFilterGain(double gain);
@@ -105,7 +104,7 @@ private:
   double m_RxPower;
   double m_efficacy;
   double illuminance;
-  
+  double m_Optical;
 
 };
 
