@@ -17,9 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: James Basuino       <jb392@njit.edu>
- * Author: Ryan Ackerman       <rea9@njit.edu>
- * Author: Walter Berreta
- * Author: Atreya Misra
  *                              
  */
 
@@ -145,8 +142,23 @@ void
 VLCPropagationLossModel::SetTxPower (double dBm)
 {
   m_TxPower = dBm;
+  m_Optical = dBm;
 }
 
+void
+VLCPropagationLossModel::SetTxPower (double deviceMax, double peak, double desired) 
+//Sets Tx power based on the Devices Max, the peak, and desired optical power
+{
+  double x = peak - desired; //Subtracts the peak by desired to get the average signal power 
+  double y = deviceMax * peak; //Multiplies the peak by deviceMax to get Max power
+  if( x > 0 ){ //Checks if peak is more than desired
+    m_TxPower = y * x; //Sets the TxPower to the average signal power times the Max power
+    m_Optical = y * desired; //Sets the Optical power to the Max times Desired.
+  }else{
+    std::cout << " Desired Optical Power larger than Peak. Your circuit would break." << std::endl;
+    std::exit(1); //Breaks if Desired greater or equal to max.
+  }
+}
 
 void 
 VLCPropagationLossModel::setEfficacy (int lower, int upper, double Temp){
@@ -170,6 +182,12 @@ VLCPropagationLossModel::GetTxPower ()
 {
   return m_TxPower;
 }
+double
+VLCPropagationLossModel::GetOpticalPower ()
+{
+  return m_Optical;
+}
+
 
 void
 VLCPropagationLossModel::SetLambertianOrder (double semiangle)
@@ -317,7 +335,7 @@ VLCPropagationLossModel::DoAssignStreams (int64_t stream)
 double VLCPropagationLossModel::calculateIlluminance(Ptr<MobilityModel> a, Ptr<MobilityModel> b){
 //distance formula from point a to point b
 double distance = std::sqrt((std::pow((b->GetPosition().x - a->GetPosition().x),2)) + (std::pow((b->GetPosition().y - a->GetPosition().y),2)) + (std::pow((b->GetPosition().z - a->GetPosition().z),2)));
-illuminance = GetTxPower()*(GetLambertianOrder()+1) * (std::pow(std::cos(GetRadianceAngle(a,b)),GetLambertianOrder())) * (std::cos(GetIncidenceAngle(a,b))) * getEfficacy()/ (2*M_PI*(std::pow(distance, 2)));
+illuminance = m_Optical*(GetLambertianOrder()+1) * (std::pow(std::cos(GetRadianceAngle(a,b)),GetLambertianOrder())) * (std::cos(GetIncidenceAngle(a,b))) * getEfficacy()/ (2*M_PI*(std::pow(distance, 2)));
 return illuminance;
 }
 
