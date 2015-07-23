@@ -149,15 +149,33 @@ void
 VLCPropagationLossModel::SetTxPower (double deviceMax, double peak, double desired) 
 //Sets Tx power based on the Devices Max, the peak, and desired optical power
 {
+  
+
+
+if(desired > .5){
   double x = peak - desired; //Subtracts the peak by desired to get the average signal power 
   double y = deviceMax * peak; //Multiplies the peak by deviceMax to get Max power
   if( x > 0 ){ //Checks if peak is more than desired
     m_TxPower = y * x; //Sets the TxPower to the average signal power times the Max power
     m_Optical = y * desired; //Sets the Optical power to the Max times Desired.
   }else{
-    std::cout << " Desired Optical Power larger than Peak. Your circuit would break." << std::endl;
+    std::cout << " Desired Optical Power larger than Peak." << std::endl;
     std::exit(1); //Breaks if Desired greater or equal to max.
   }
+}else{
+  double x = peak - desired; //Subtracts the peak by desired to get the average signal power 
+  double y = deviceMax * peak; //Multiplies the peak by deviceMax to get Max power
+  if(x>0){
+  m_TxPower = y*desired;
+  m_Optical = m_TxPower;
+}else{
+std::cout<<" Desired Optical Power larger than Peak." <<std::endl;
+std::exit(1);
+
+}
+}
+
+
 }
 
 void 
