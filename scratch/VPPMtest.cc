@@ -117,13 +117,9 @@ VPLM.SetLambertianOrder(70);
 VPLM.SetFilterGain(1);
 VPLM.SetPhotoDetectorArea(1.0e-4);
 VPLM.SetConcentratorGain(70,1.5);
-//Also initial conditions, but these are made in the error model since thats where the values are used to calculate BER
-//em2->setRes(0.28);
-//em2->setM(2);
-//double sym = log2(em2->getM()) *5;
 
-em2->setDutyCycle(0.85);
-em2->setb(10.0);
+em2->setDutyCycle(0.85); //Sets the Duty Cycle for the Modulation
+em2->setb(10.0); //Sets the factor between Noise Bandwidth and Signal Bandwidth
 em2->setNo(380,380,5000,5*1e6,VPLM.GetPhotoDetectorArea(),VPLM.GetRxPower(a,b));
 std::ostringstream ss;
 
